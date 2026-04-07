@@ -17,6 +17,7 @@ Abaixo estão os detalhes técnicos das principais configurações implementadas
 A rede local foi segmentada em VLANs para otimizar o tráfego e aumentar a segurança. A comunicação entre as VLANs é realizada através da técnica Router-on-a-Stick na interface GigabitEthernet0/0 do roteador principal.
 
 Estrutura de VLANs (Switch ASW):
+
 ![Tabela](https://github.com/user-attachments/assets/87c50edc-0982-4b5d-a329-5b4b5fd97fcf)
 
 Configuração Trunk: A porta Gig0/1 do switch está configurada como Trunk (802.1q) para transportar o tráfego de todas as VLANs para o roteador.
