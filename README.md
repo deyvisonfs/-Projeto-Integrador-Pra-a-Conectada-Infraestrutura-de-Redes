@@ -84,3 +84,30 @@ Interface: Gi0/0.10
 Endereço: 2001:DB8:0:AA10::1/64
 
 Link-Local: FE80::203:E4FF:FEB2:8701
+
+---
+
+## 📅 Atualização do PI II – Cronograma e Banco de Dados
+
+Na segunda etapa do Projeto Integrador (PI II), a Praça Conectada recebeu um **banco de dados de cadastro de clientes** e um **cronograma de execução** completo. O documento corrigido está em [`documentacao/`](documentacao/) (versões `.docx` e `.pdf`).
+
+### Cronograma (16 semanas, 17/08 a 04/12/2026)
+| Fase | Semanas | Entrega |
+|---|---|---|
+| 1. Planejamento e levantamento | S1–S2 | Base técnica e plano do projeto |
+| 2. Projeto lógico da rede | S3–S5 | Topologia, VLANs e endereçamento (1ª entrega) |
+| 3. Implementação da rede | S6–S10 | Router-on-a-Stick, DHCP/DNS/Web, NAT/PAT e testes |
+| 4. Banco de dados de clientes | S11–S13 | DER, normalização 3FN, scripts SQL e testes no DBeaver |
+| 5. Segurança e documentação | S13–S15 | ACLs, LGPD, análise e publicação no GitHub |
+| 6. Revisão e entrega | S15–S16 | Versão final do PI II |
+
+O detalhamento (atividades, responsáveis, marcos, ordem de implementação e riscos) está no capítulo 5 do documento.
+
+### 🗄️ Banco de dados de cadastro de clientes
+Modelo relacional em **3ª Forma Normal** que registra clientes, dispositivos (MAC), concessões DHCP na VLAN 10 e sessões Wi-Fi por ponto de acesso (os 4 APs 9115AXI), com consentimento LGPD por versão do termo.
+
+- Pasta: [`banco-de-dados/`](banco-de-dados/) – banco SQLite pronto, scripts SQLite e PostgreSQL, consultas e diagrama ER.
+- **DBeaver:** Nova conexão > SQLite > `praca_conectada.db`, ou execute `praca_conectada_postgres.sql` (Alt+X) em um banco PostgreSQL vazio.
+- Os dados de exemplo são fictícios.
+
+![Diagrama ER](banco-de-dados/diagrama_er.png)
