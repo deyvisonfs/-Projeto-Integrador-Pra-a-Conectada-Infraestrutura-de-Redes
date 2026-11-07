@@ -40,7 +40,7 @@ A **Praça Conectada** simula um Wi-Fi comunitário para moradores, comerciantes
 | Dimensionamento dos ativos e orçamento de referência | ✅ Feito (documento) |
 | Modelo do banco de dados em 3FN, scripts SQLite e PostgreSQL | ✅ Feito e testado |
 | Documento do PI II corrigido, com cronograma | ✅ Feito |
-| Prints do banco de dados no DBeaver | 🔜 A adicionar |
+| Prints do banco de dados no DBeaver | ✅ 7 prints (faltam o diagrama ER e a lista de tabelas) |
 | Política de segurança entre VLANs (ACLs) | 🔜 Proposta, ainda não implementada |
 | Teste de failover entre ISP1 e ISP2 | 🔜 Próxima etapa |
 | Carga automática das concessões DHCP no banco | 🔜 Evolução |
@@ -195,27 +195,30 @@ Consultas de apresentação estão em [`banco-de-dados/consultas.sql`](banco-de-
 > Todos os dados de exemplo são **fictícios** (e-mails do domínio `exemplo.com.br` e MACs de administração local). O cadastro segue a minimização da LGPD: apenas nome, e-mail e telefone.
 
 ## 📸 Evidências no DBeaver
-Os prints do banco de dados rodando no DBeaver serão adicionados aqui. Cada imagem deve ser salva em [`banco-de-dados/imagens/`](banco-de-dados/imagens/) com o nome sugerido (veja o [guia de prints](banco-de-dados/imagens/LEIA-ME.md)).
+Prints do banco `praca_conectada.db` (SQLite) aberto no DBeaver 26.2.4, com dados fictícios.
 
-| # | Evidência | Arquivo sugerido | Situação |
-|---|---|---|---|
-| 1 | Conexão criada e tabelas listadas | `01-conexao-tabelas.png` | 🔜 |
-| 2 | Diagrama ER gerado pelo DBeaver | `02-diagrama-dbeaver.png` | 🔜 |
-| 3 | Tabela `cliente` com os dados | `03-tabela-cliente.png` | 🔜 |
-| 4 | Concessões DHCP ativas (`vw_concessoes_ativas`) | `04-concessoes-ativas.png` | 🔜 |
-| 5 | Uso por ponto de acesso (`vw_uso_por_ap`) | `05-uso-por-ap.png` | 🔜 |
-| 6 | Teste de regra recusada (MAC inválido) | `06-teste-integridade.png` | 🔜 |
-| 7 | Bloqueio de cliente e tabela de auditoria | `07-auditoria.png` | 🔜 |
+**1. Conexão e visões criadas pelo script**
+![Conexão e visões](banco-de-dados/imagens/01-conexao-visoes.png)
 
-<!-- Quando os prints estiverem na pasta, descomente as linhas abaixo:
-![Conexão e tabelas](banco-de-dados/imagens/01-conexao-tabelas.png)
-![Diagrama no DBeaver](banco-de-dados/imagens/02-diagrama-dbeaver.png)
-![Tabela cliente](banco-de-dados/imagens/03-tabela-cliente.png)
+**2. Clientes ativos (`vw_clientes_ativos`):** 12 dos 14 clientes (1 bloqueado e 1 inativo ficam de fora)
+![Clientes ativos](banco-de-dados/imagens/03-dados-clientes-ativos.png)
+
+**3. Concessões DHCP ativas na VLAN 10 (`vw_concessoes_ativas`):** 21 IPs entregues
 ![Concessões ativas](banco-de-dados/imagens/04-concessoes-ativas.png)
+
+**4. Uso por ponto de acesso (`vw_uso_por_ap`):** 91 sessões nos 4 APs
 ![Uso por AP](banco-de-dados/imagens/05-uso-por-ap.png)
+
+**5. Regra de integridade:** MAC inválido recusado pelo `CHECK`
 ![Teste de integridade](banco-de-dados/imagens/06-teste-integridade.png)
+
+**6. Auditoria:** bloqueio do cliente 3 registrado pelo gatilho
 ![Auditoria](banco-de-dados/imagens/07-auditoria.png)
--->
+
+**7. Bloqueio em cascata:** o dispositivo do cliente bloqueado também é bloqueado (`bloqueado = 1`)
+![Dispositivo bloqueado](banco-de-dados/imagens/08-dispositivo-bloqueado.png)
+
+Pendentes: diagrama ER gerado pelo DBeaver (`02-diagrama-dbeaver.png`) e lista de tabelas. Veja o [guia de prints](banco-de-dados/imagens/LEIA-ME.md).
 
 ## 📅 Cronograma
 16 semanas, de 17/08 a 04/12/2026 (datas previstas, ajustáveis ao calendário da disciplina).
@@ -244,12 +247,13 @@ O detalhamento (atividades, responsáveis, marcos, ordem de implementação e ri
 │   ├── praca_conectada_postgres.sql
 │   ├── consultas.sql
 │   ├── diagrama_er.png
-│   └── imagens/                        # prints do DBeaver
+│   └── imagens/                        # prints do DBeaver (01 a 08)
 └── *.jpg                               # evidências do Packet Tracer
 ```
 
 ## 🚀 Próximos passos
-- [ ] Adicionar os prints do DBeaver (seção acima).
+- [x] Adicionar os prints do DBeaver (seção acima).
+- [ ] Adicionar o print do diagrama ER completo gerado pelo DBeaver.
 - [ ] Implementar as ACLs entre as VLANs e restringir a administração à VLAN 99.
 - [ ] Testar o failover entre ISP1 e ISP2.
 - [ ] Automatizar a carga das concessões DHCP e das sessões no banco.
