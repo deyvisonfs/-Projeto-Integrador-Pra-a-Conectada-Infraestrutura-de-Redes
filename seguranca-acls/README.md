@@ -9,7 +9,7 @@ Implementado e testado em 08/11/2026 no Router0 (borda). Detalhes completos no *
 ## Achados durante a implementação
 1. **Controlador WLC (10.0.4.5, VLAN 20)** troca tráfego com os clientes da VLAN 10 nos dois sentidos. Sem exceção, os dispositivos perdiam o Wi-Fi. Foram criadas duas exceções (`permit ip host 10.0.4.5 ...` e `permit ip ... host 10.0.4.5`). Os contadores (`show access-lists`) mostraram a causa.
 2. **NAT estava ligado à interface do ISP2** (Gi0/1/0) enquanto a rota padrão ia ao ISP1. Corrigido para Gi0/0/0; ping ao ISP1 (200.1.1.1) validado.
-3. **Failover ISP1↔ISP2: não implementado.** O roteador do Packet Tracer não aceita `route-map` no NAT. Fica como proposta para roteador real (rota flutuante + route-map + IP SLA/track) — ver D.7.
+3. **Failover ISP1↔ISP2: não implementado.** O roteador do Packet Tracer não aceita `route-map` no NAT. Fica como proposta para roteador real (rota flutuante + route-map + IP SLA/track) — ver D.7 e [`failover_proposta.md`](failover_proposta.md).
 
 ## Pendências
 - Testar HTTP/DNS com as quatro ACLs ativas.
