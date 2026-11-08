@@ -41,8 +41,9 @@ A **Praça Conectada** simula um Wi-Fi comunitário para moradores, comerciantes
 | Modelo do banco de dados em 3FN, scripts SQLite e PostgreSQL | ✅ Feito e testado |
 | Documento do PI II corrigido, com cronograma | ✅ Feito |
 | Prints do banco de dados no DBeaver | ✅ 7 prints (faltam o diagrama ER e a lista de tabelas) |
-| Política de segurança entre VLANs (ACLs) | 🔜 Proposta, ainda não implementada |
-| Teste de failover entre ISP1 e ISP2 | 🔜 Próxima etapa |
+| Política de segurança entre VLANs (ACLs) | ✅ Implementada e testada ([`seguranca-acls/`](seguranca-acls/)); pendente: HTTP/DNS com as 4 ACLs e IPv6 |
+| Correção do NAT (saída pelo ISP1) | ✅ Validada |
+| Failover entre ISP1 e ISP2 | ⚠️ Não implementado no Packet Tracer (sem `route-map` no NAT); proposta documentada |
 | Carga automática das concessões DHCP no banco | 🔜 Evolução |
 
 ## 🛠️ Topologia e configurações da rede
@@ -248,14 +249,16 @@ O detalhamento (atividades, responsáveis, marcos, ordem de implementação e ri
 │   ├── consultas.sql
 │   ├── diagrama_er.png
 │   └── imagens/                        # prints do DBeaver (01 a 08)
+├── seguranca-acls/                     # ACLs, NAT e prints do Packet Tracer
 └── *.jpg                               # evidências do Packet Tracer
 ```
 
 ## 🚀 Próximos passos
 - [x] Adicionar os prints do DBeaver (seção acima).
 - [ ] Adicionar o print do diagrama ER completo gerado pelo DBeaver.
-- [ ] Implementar as ACLs entre as VLANs e restringir a administração à VLAN 99.
-- [ ] Testar o failover entre ISP1 e ISP2.
+- [x] Implementar as ACLs entre as VLANs e restringir a administração à VLAN 99.
+- [ ] Testar HTTP/DNS com as quatro ACLs ativas, investigar os 380 pacotes negados e criar ACLs IPv6.
+- [ ] Testar o failover entre ISP1 e ISP2 em roteador/simulador com suporte a `route-map` no NAT.
 - [ ] Automatizar a carga das concessões DHCP e das sessões no banco.
 - [ ] Definir o prazo de guarda dos registros de conexão (Marco Civil da Internet) e a rotina de backup do banco.
 

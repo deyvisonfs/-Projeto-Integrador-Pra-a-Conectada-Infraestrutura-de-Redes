@@ -1,0 +1,56 @@
+! Praça Conectada – ACLs aplicadas no Router0 (Packet Tracer), testadas em 08/11/2026
+! Extended named ACLs, entrada (in) nas subinterfaces; abordagem sem estado (established/echo-reply)
+! ---- VLAN 99: gerenciamento ----
+ip access-list extended MGMT_IN
+ permit ip 10.0.99.0 0.0.0.255 any
+! ---- VLAN 20: servidores ----
+ip access-list extended SERVERS_IN
+ permit udp host 10.0.4.2 eq 67 10.0.0.0 0.0.3.255 eq 68
+ permit ip host 10.0.4.5 10.0.0.0 0.0.3.255
+ permit udp host 10.0.4.2 eq 67 host 10.0.0.1 eq 67
+ permit udp 10.0.4.0 0.0.0.15 eq 53 10.0.0.0 0.0.3.255
+ permit tcp 10.0.4.0 0.0.0.15 eq 53 10.0.0.0 0.0.3.255
+ permit icmp 10.0.4.0 0.0.0.15 10.0.0.0 0.0.3.255 echo-reply
+ permit icmp 10.0.4.0 0.0.0.15 10.0.99.0 0.0.0.255 echo-reply
+ permit tcp 10.0.4.0 0.0.0.15 10.0.99.0 0.0.0.255 established
+ deny ip 10.0.4.0 0.0.0.15 10.0.0.0 0.0.3.255
+ deny ip 10.0.4.0 0.0.0.15 10.0.8.0 0.0.0.255
+ deny ip 10.0.4.0 0.0.0.15 10.0.99.0 0.0.0.255
+ permit ip 10.0.4.0 0.0.0.15 any
+! ---- VLAN 30: DMZ ----
+ip access-list extended DMZ_IN
+ permit tcp host 10.0.8.2 eq 80 10.0.0.0 0.0.3.255 established
+ permit tcp host 10.0.8.2 eq 443 10.0.0.0 0.0.3.255 established
+ permit icmp host 10.0.8.2 10.0.0.0 0.0.3.255 echo-reply
+ permit icmp host 10.0.8.2 10.0.99.0 0.0.0.255 echo-reply
+ deny ip 10.0.8.0 0.0.0.255 10.0.0.0 0.0.3.255
+ deny ip 10.0.8.0 0.0.0.255 10.0.4.0 0.0.0.15
+ deny ip 10.0.8.0 0.0.0.255 10.0.99.0 0.0.0.255
+ permit ip 10.0.8.0 0.0.0.255 any
+! ---- VLAN 10: usuários ----
+ip access-list extended USERS_IN
+ permit ip 10.0.0.0 0.0.3.255 host 10.0.4.5
+ permit udp any eq 68 any eq 67
+ permit udp 10.0.0.0 0.0.3.255 host 10.0.4.2 eq 53
+ permit tcp 10.0.0.0 0.0.3.255 host 10.0.4.2 eq 53
+ permit tcp 10.0.0.0 0.0.3.255 host 10.0.8.2 eq 80
+ permit tcp 10.0.0.0 0.0.3.255 host 10.0.8.2 eq 443
+ permit icmp 10.0.0.0 0.0.3.255 host 10.0.4.2 echo
+ permit icmp 10.0.0.0 0.0.3.255 host 10.0.8.2 echo
+ permit icmp 10.0.0.0 0.0.3.255 10.0.99.0 0.0.0.255 echo-reply
+ permit tcp 10.0.0.0 0.0.3.255 10.0.99.0 0.0.0.255 established
+ deny ip 10.0.0.0 0.0.3.255 10.0.99.0 0.0.0.255
+ deny ip 10.0.0.0 0.0.3.255 10.0.4.0 0.0.0.15
+ deny ip 10.0.0.0 0.0.3.255 10.0.8.0 0.0.0.255
+ permit ip 10.0.0.0 0.0.3.255 any
+! ---- Aplicação na entrada das subinterfaces ----
+interface GigabitEthernet0/0.10
+ ip access-group USERS_IN in
+interface GigabitEthernet0/0.20
+ ip access-group SERVERS_IN in
+interface GigabitEthernet0/0.30
+ ip access-group DMZ_IN in
+interface GigabitEthernet0/0.99
+ ip access-group MGMT_IN in
+! ---- NAT Overload pela interface do ISP1 ----
+ip nat inside source list 1 interface GigabitEthernet0/0/0 overload
